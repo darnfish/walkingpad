@@ -1,7 +1,7 @@
 {
   "name": "walkingpad",
-  "version": "1.0.0",
-  "description": "API for interacting with Kingsmith WalkingPad models",
+  "version": "1.0.1",
+  "description": "Library for interacting with Kingsmith WalkingPad models",
   "main": "./lib/index.js",
   "repository": "https://github.com/darnfish/walkingpad.git",
   "author": "William Gibson <william@darn.fish>",
