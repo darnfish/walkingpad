@@ -182,6 +182,8 @@ export default class WalkingPad extends EventEmitter {
 		this.recv.removeListener('data', this.onRecvCharacteristicData)
 		this.send.removeListener('write', this.onSendCharacteristicWrite)
 
+		this.emit('disconnected')
+
 		this.peripheral = null
 		this.send = null
 		this.recv = null
