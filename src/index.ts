@@ -82,8 +82,6 @@ export default class WalkingPad extends EventEmitter {
 	async connect() {		
 		this.connectionStatus = 'connecting'
 
-		console.log('[wp] [ble] connecting...')
-
 		if(noble.state === 'poweredOn')
 			await noble.startScanningAsync([], false)
 		else
@@ -109,8 +107,6 @@ export default class WalkingPad extends EventEmitter {
 			return
 
 		this.peripheral = peripheral
-
-		console.log('[wp] [ble] got peripheral!')
 	
 		await noble.stopScanningAsync()
 	
@@ -122,8 +118,6 @@ export default class WalkingPad extends EventEmitter {
 
 	private onPeripheralConnect = async () => {
 		this.connectionStatus = 'connected'
-		
-		console.log('[wp] [ble] connected to pperipheral')
 
 		/**
 		 * Discover Characteristics
@@ -131,15 +125,11 @@ export default class WalkingPad extends EventEmitter {
 		const { services } = await this.peripheral.discoverAllServicesAndCharacteristicsAsync()
 		for(const service of services)
 			for(const characteristic of service.characteristics) {
-				if(characteristic.uuid.startsWith('fe01')) {
+				if(characteristic.uuid.startsWith('fe01'))
 					this.recv = characteristic
-					console.log('[wp] [ble] got fe01 characteristic!')
-				}
 
-				if(characteristic.uuid.startsWith('fe02')) {
+				if(characteristic.uuid.startsWith('fe02'))
 					this.send = characteristic
-					console.log('[wp] [ble] got fe02 characteristic!')
-				}
 			}
 
 		/**
@@ -177,8 +167,6 @@ export default class WalkingPad extends EventEmitter {
 				controllerButton
 			}
 
-			console.log(JSON.stringify(this.state))
-
 			this.emit('state_update', this.state)
 		}
 	}
@@ -188,8 +176,6 @@ export default class WalkingPad extends EventEmitter {
 	}
 
 	private onPeripheralDisconnect = async () => {
-		console.log('Disconnected')
-
 		this.peripheral.removeListener('connect', this.onPeripheralConnect)
 		this.peripheral.removeListener('disconnect', this.onPeripheralDisconnect)
 
@@ -240,7 +226,6 @@ export default class WalkingPad extends EventEmitter {
 		const buffer = Buffer.from(bytes)
 
 		const shouldWait = waitTime > (Date.now() - this.lastCommandSentAt)
-		console.log({ shouldWait })
 		if(shouldWait)
 			return this.commandQueue.push({
 				buffer,
@@ -251,8 +236,6 @@ export default class WalkingPad extends EventEmitter {
 	}
 
 	private async _write(buffer: Buffer) {
-		console.log('sending', Uint8Array.from(buffer))
-
 		await this.send.writeAsync(buffer, true)
 	}
 
